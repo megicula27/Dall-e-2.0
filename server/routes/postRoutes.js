@@ -27,6 +27,7 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
+  console.log(req);
   try {
     const { name, prompt, photo } = req.body;
     console.log("Received post request:", name, prompt, photo);
