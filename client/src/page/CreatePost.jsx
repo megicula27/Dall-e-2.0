@@ -59,10 +59,9 @@ const CreatePost = () => {
 
     if (form.prompt && form.photo) {
       setLoading(true);
-      console.log(JSON.stringify({ ...form }));
       try {
         const response = await fetch(
-          "https://dall-e-2-0-4ucx.onrender.com/api/v1/post",
+          "https://dall-e-2-0-4ucx.onrender.com/api/v1/post/create-post",
           {
             method: "POST",
             headers: {

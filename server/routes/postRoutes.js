@@ -26,7 +26,7 @@ router.route("/").get(async (req, res) => {
   }
 });
 
-router.route("/").post(async (req, res) => {
+router.route("/create-post").post(async (req, res) => {
   console.log(req.body);
   try {
     const { name, prompt, photo } = req.body;
