@@ -8,7 +8,6 @@ import dalleRoutes from "./routes/dalleRoutes.js";
 
 const port = process.env.PORT || 4000;
 dotenv.config();
-
 const app = express();
 app.use((req, res, next) => {
   res.header(
