@@ -41,7 +41,7 @@ const CreatePost = () => {
             }),
           }
         );
-        console.log(response);
+
         const data = await response.json();
         setForm({ ...form, photo: `data:image/jpeg;base64,${data.photo}` });
       } catch (err) {
@@ -59,6 +59,7 @@ const CreatePost = () => {
 
     if (form.prompt && form.photo) {
       setLoading(true);
+      console.log(JSON.stringify({ ...form }));
       try {
         const response = await fetch(
           "https://dall-e-2-0-4ucx.onrender.com/api/v1/post",
@@ -71,10 +72,16 @@ const CreatePost = () => {
           }
         );
 
-        await response.json();
-        console.log(response.json());
-        alert("Success");
-        navigate("/");
+        // Store the parsed JSON data
+        const data = await response.json();
+        console.log(data);
+        // Use the data here (e.g., check for success, handle errors)
+        if (data.success) {
+          alert("Success");
+          navigate("/");
+        } else {
+          alert(data.message);
+        }
       } catch (err) {
         alert(err);
       } finally {

@@ -19,20 +19,25 @@ router.route("/").get(async (req, res) => {
     const posts = await Post.find({});
     res.status(200).json({ success: true, data: posts });
   } catch (err) {
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Fetching posts failed, please try again",
-      });
+    res.status(500).json({
+      success: false,
+      message: "Fetching posts failed, please try again",
+    });
   }
 });
 
 router.route("/").post(async (req, res) => {
+  console.log(req.body);
   try {
     const { name, prompt, photo } = req.body;
     console.log(name, prompt, photo);
-    const photoUrl = await cloudinary.uploader.upload(photo);
+    const photoUrl = await cloudinary.uploader.upload(
+      "https://upload.wikimedia.org/wikipedia/commons/a/ae/Olympic_flag.jpg",
+      { public_id: "olympic_flag" },
+      function (error, result) {
+        console.log(result);
+      }
+    );
 
     const newPost = await Post.create({
       name,
@@ -42,12 +47,10 @@ router.route("/").post(async (req, res) => {
 
     res.status(200).json({ success: true, data: newPost });
   } catch (err) {
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Unable to create a post, please try again",
-      });
+    res.status(500).json({
+      success: false,
+      message: "Unable to create a post, please try again",
+    });
   }
 });
 
