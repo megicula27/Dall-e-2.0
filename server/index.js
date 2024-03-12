@@ -13,7 +13,7 @@ app.use(express.json({ limit: "50mb" }));
 app.use((req, res, next) => {
   res.header(
     "Access-Control-Allow-Origin",
-    "https://dall-e-2-0-three.vercel.app" // Replace with your exact domain
+    "https://dall-e-2-0-1q6evxyf2-megicula27s-projects.vercel.app" // Replace with your exact domain
   );
   res.header(
     "Access-Control-Allow-Headers",
