@@ -70,11 +70,16 @@ const CreatePost = () => {
             body: JSON.stringify({ ...form }),
           }
         );
+        const data = await response.json();
 
-        await response.json();
-        console.log(response.json());
-        alert("Success");
-        navigate("/");
+        // Use the data here (e.g., check for success, handle errors)
+        if (data.success) {
+          alert("Success!");
+          navigate("/");
+          // ... other actions on successful post creation
+        } else {
+          alert(data.message);
+        }
       } catch (err) {
         alert(err);
       } finally {
