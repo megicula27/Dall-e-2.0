@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { preview } from "../assets";
 import { getRandomPrompt } from "../utils";
 import { FormField, Loader } from "../components";
-
+import axios from "axios";
 const CreatePost = () => {
   const navigate = useNavigate();
 
