@@ -21,17 +21,17 @@ router.route("/").post(async (req, res) => {
     const { prompt } = req.body;
     console.log("prompt:", prompt);
     const aiResponse = await openai.createImage({
-      model: "dall-e-3",
       prompt,
       n: 1,
       size: "1024x1024",
+      response_format: "b64_json",
     });
     console.log("ai:", aiResponse);
-    const image = aiResponse.data.data[0].url;
+    const image = aiResponse.data.data[0].b64_json;
     console.log("Generated Image:", image);
     res.status(200).json({ photo: image });
   } catch (error) {
-    console.log("Error:", error);
+    console.error("Error:", error);
     console.error(error);
     res
       .status(500)
