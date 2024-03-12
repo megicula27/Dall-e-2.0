@@ -9,10 +9,11 @@ import dalleRoutes from "./routes/dalleRoutes.js";
 const port = process.env.PORT || 4000;
 dotenv.config();
 const app = express();
+app.use(express.json({ limit: "50mb" }));
 app.use((req, res, next) => {
   res.header(
     "Access-Control-Allow-Origin",
-    "https://dall-e-2-0-three.vercel.app"
+    "https://dall-e-2-0-three.vercel.app" // Replace with your exact domain
   );
   res.header(
     "Access-Control-Allow-Headers",
@@ -20,14 +21,15 @@ app.use((req, res, next) => {
   );
   next();
 });
+
 app.use(
   cors({
     origin: [process.env.FRONTEND_URL],
+
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
 );
-app.use(express.json({ limit: "50mb" }));
 
 app.use("/api/v1/post", postRoutes);
 app.use("/api/v1/dalle", dalleRoutes);
