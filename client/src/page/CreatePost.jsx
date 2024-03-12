@@ -5,83 +5,67 @@ import { preview } from "../assets";
 import { getRandomPrompt } from "../utils";
 import { FormField, Loader } from "../components";
 import axios from "axios";
-const CreatePost = () => {
-  const navigate = useNavigate();
+function CreatePost() {
+  const [form, setForm] = useState({ name: "", prompt: "", photo: null }); // Initial form state
+  const [loading, setLoading] = useState(false); // State for loading indicator
+  const fileInputRef = useRef(null); // Reference for file input element
 
-  const [form, setForm] = useState({
-    name: "",
-    prompt: "",
-    photo: "",
-  });
-
-  const [generatingImg, setGeneratingImg] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  const handleChange = (e) =>
-    setForm({ ...form, [e.target.name]: e.target.value });
-
-  const handleSurpriseMe = () => {
-    const randomPrompt = getRandomPrompt(form.prompt);
-    setForm({ ...form, prompt: randomPrompt });
+  const handleInputChange = (event) => {
+    setForm({ ...form, [event.target.name]: event.target.value });
   };
 
-  const generateImage = async () => {
-    if (form.prompt) {
-      try {
-        setGeneratingImg(true);
-        const response = await fetch(
-          "https://dall-e-2-0-4ucx.onrender.com/api/v1/dalle",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              prompt: form.prompt,
-            }),
-          }
-        );
-        console.log(response);
-        const data = await response.json();
-        setForm({ ...form, photo: `data:image/jpeg;base64,${data.photo}` });
-      } catch (err) {
-        alert(err);
-      } finally {
-        setGeneratingImg(false);
-      }
-    } else {
-      alert("Please provide proper prompt");
+  const handleImageUpload = (event) => {
+    const selectedFile = event.target.files[0];
+
+    if (!selectedFile) {
+      return; // Handle empty file selection
     }
+
+    setForm({ ...form, photo: selectedFile });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-    if (form.prompt && form.photo) {
-      setLoading(true);
-      try {
-        const response = await fetch(
-          "https://dall-e-2-0-4ucx.onrender.com/api/v1/post",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ ...form }),
-          }
-        );
+    if (!form.name || !form.prompt || !form.photo) {
+      alert("Please fill in all fields and generate an image.");
+      return; // Prevent submission if required fields are missing
+    }
 
-        await response.json();
-        console.log(response.json());
-        alert("Success");
-        navigate("/");
-      } catch (err) {
-        alert(err);
-      } finally {
-        setLoading(false);
+    setLoading(true);
+
+    try {
+      const formData = new FormData(); // Use FormData for file upload
+      formData.append("name", form.name);
+      formData.append("prompt", form.prompt);
+      formData.append("photo", form.photo);
+
+      const response = await fetch(
+        "https://dall-e-2-0-4ucx.onrender.com/api/v1/post",
+        {
+          method: "POST",
+          // Consider adding appropriate CORS headers if needed
+          body: formData,
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Network response was not ok: ${response.status}`);
       }
-    } else {
-      alert("Please generate an image with proper details");
+
+      const data = await response.json();
+
+      if (data.success) {
+        alert("Success! Your post has been created.");
+        // Optionally clear the form or navigate elsewhere
+      } else {
+        alert(data.message);
+      }
+    } catch (error) {
+      console.error("Error creating post:", error);
+      alert("An error occurred. Please try again later.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -165,6 +149,6 @@ const CreatePost = () => {
       </form>
     </section>
   );
-};
+}
 
 export default CreatePost;
