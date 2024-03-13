@@ -32,14 +32,14 @@ router.post("/", async (req, res) => {
     const { name, prompt, photo } = req.body;
     console.log("Received post request:", name, prompt, photo);
 
-    const photoUrl = await cloudinary.uploader.upload(photo, {
-      public_id: "unique_public_id",
-    });
+    // const photoUrl = await cloudinary.uploader.upload(photo, {
+    //   public_id: "unique_public_id",
+    // });
 
     const newPost = await Post.create({
       name,
       prompt,
-      photo: photoUrl.url,
+      photo,
     });
 
     res.status(200).json({ success: true, data: newPost });

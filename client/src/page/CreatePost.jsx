@@ -72,11 +72,9 @@ const CreatePost = () => {
         );
         const data = await response.json();
 
-        // Use the data here (e.g., check for success, handle errors)
         if (data.success) {
           alert("Success!");
           navigate("/");
-          // ... other actions on successful post creation
         } else {
           alert(data.message);
         }
